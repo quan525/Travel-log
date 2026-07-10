@@ -5,8 +5,11 @@
         Travel Log
       </NuxtLink>
     </div>
-    <button class="navbar-end">
-        <a class="btn btn-accent">Sign in</a>
-    </button>
+    <div class="navbar-end">
+      <AppThemeToggle class="mr-3 "/> 
+      <a class="btn btn-accent">Sign in with Github 
+        <Icon name=""/>
+      </a>
+    </div>
   </div>
 </template>

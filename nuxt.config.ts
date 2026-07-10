@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import './lib/env'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,12 +10,18 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/icon',
+    '@nuxtjs/color-mode'
   ],
 
   eslint: {
     config: {
       standalone: false,
     },
+  },
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+    dataValue: 'theme',
   },
   css: ['~/assets/css/main.css'],
   vite: {

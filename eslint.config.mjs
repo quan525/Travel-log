@@ -31,6 +31,7 @@ export default withNuxt(
 
     {
       rules: {
+        "ts/no-redeclare": "off",
         'unicorn/filename-case': [
           'error',
           {
