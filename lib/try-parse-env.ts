@@ -1,5 +1,6 @@
 import type { z, ZodObject, ZodRawShape } from 'zod'
 
+import process from 'node:process'
 import { ZodError } from 'zod'
 
 export default function tryParseEnv<T extends ZodRawShape>(

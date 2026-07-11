@@ -23,7 +23,7 @@ export default withNuxt(
       jsonc: false,
       yaml: false,
 
-      ignores: [".pnpm-store/**", "**/migrations/*"]
+      ignores: ['.pnpm-store/**', '**/migrations/*'],
     },
 
     {
