@@ -8,6 +8,10 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "prepare": "husky"
@@ -29,6 +33,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",
+    "drizzle-kit": "^0.31.10",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
   },
