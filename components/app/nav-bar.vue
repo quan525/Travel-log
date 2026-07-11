@@ -6,9 +6,9 @@
       </NuxtLink>
     </div>
     <div class="navbar-end">
-      <AppThemeToggle class="mr-3 "/> 
-      <a class="btn btn-accent">Sign in with Github 
-        <Icon name=""/>
+      <AppThemeToggle class="mr-3 " />
+      <a class="btn btn-accent">Sign in with Github
+        <Icon name="" />
       </a>
     </div>
   </div>

@@ -9,11 +9,6 @@ export default withNuxt(
       // Nuxt is an application, not a reusable library.
       type: 'app',
 
-      ignores: [
-        '**/fixtures/**',
-        'README.md',
-      ],
-
       gitignore: true,
 
       stylistic: {
@@ -22,16 +17,18 @@ export default withNuxt(
         braceStyle: 'stroustrup',
       },
 
-      typescript: true,
       vue: true,
-
+      typescript: true,
+      formatters: true,
       jsonc: false,
       yaml: false,
+
+      ignores: [".pnpm-store/**", "**/migrations/*"]
     },
 
     {
       rules: {
-        "ts/no-redeclare": "off",
+        'ts/no-redeclare': 'off',
         'unicorn/filename-case': [
           'error',
           {
