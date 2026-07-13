@@ -22,7 +22,10 @@ jobs:
     env:
       NODE_ENV: test
       TURSO_DATABASE_URL: file:local.db
-      TURSO_AUTH_TOKEN: ci-placeholder
+      BETTER_AUTH_SECRET: github-actions-only-secret-at-least-32-characters
+      BETTER_AUTH_URL: http://localhost:3000
+      GITHUB_CLIENT_ID: github-actions-client-id
+      GITHUB_CLIENT_SECRET: github-actions-client-secret
 
     steps:
       - name: Checkout repository

@@ -13,7 +13,6 @@ export default withNuxt(
 
       stylistic: {
         indent: 2,
-        quotes: 'single',
         braceStyle: 'stroustrup',
       },
 
@@ -28,6 +27,7 @@ export default withNuxt(
 
     {
       rules: {
+        'style/quotes': 'off',
         'ts/no-redeclare': 'off',
         'unicorn/filename-case': [
           'error',

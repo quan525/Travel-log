@@ -15,6 +15,13 @@
       "when": 1783739552236,
       "tag": "0001_smart_bloodscream",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783824054552,
+      "tag": "0002_cloudy_khan",
+      "breakpoints": true
     }
   ]
 }

@@ -6,10 +6,8 @@
       </NuxtLink>
     </div>
     <div class="navbar-end">
-      <AppThemeToggle class="mr-3 " />
-      <a class="btn btn-accent">Sign in with Github
-        <Icon name="" />
-      </a>
+      <AppThemeToggle class="mr-3" />
+      <AuthButton />
     </div>
   </div>
 </template>
