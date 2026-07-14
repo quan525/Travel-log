@@ -9,6 +9,9 @@ const baseURL = env.BETTER_AUTH_URL ?? {
     "localhost:*",
     "*.vercel.app",
   ],
+  trustedOrigins: [
+    "https://*-projects.vercel.app",
+  ],
   protocol: "auto" as const,
 }
 
