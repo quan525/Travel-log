@@ -22,10 +22,11 @@ jobs:
     env:
       CI: true
       TURSO_DATABASE_URL: file:local.db
-      BETTER_AUTH_SECRET: github-actions-only-secret-at-least-32-characters
-      BETTER_AUTH_URL: http://localhost:3000
-      GITHUB_CLIENT_ID: github-actions-client-id
-      GITHUB_CLIENT_SECRET: github-actions-client-secret
+      TURSO_AUTH_TOKEN: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      BETTER_AUTH_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
 
     steps:
       - name: Checkout repository
