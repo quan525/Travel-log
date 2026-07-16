@@ -27,6 +27,8 @@ jobs:
       BETTER_AUTH_URL: ${{ secrets.GITHUB_CLIENT_SECRET }}
       GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_SECRET }}
       GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      APP_PRODUCTION_URL: ${{ secrets.APP_PRODUCTION_URL }}
+      OAUTH_PROXY_SECRET: ${{ secrets.OAUTH_PROXY_SECRET }}
 
     steps:
       - name: Checkout repository
