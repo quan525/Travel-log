@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useAuthStore } from '~/store/auth'
 
 const authStore = useAuthStore()
@@ -20,10 +20,10 @@ const authStore = useAuthStore()
     </div>
     <ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
       <li>
-        <button type="button" @click="authStore.signOut">
+        <NuxtLink to="/sign-out">
           <Icon name="tabler:logout-2" size="24" />
           Sign Out
-        </button>
+        </NuxtLink>
       </li>
     </ul>
   </div>
@@ -31,10 +31,9 @@ const authStore = useAuthStore()
     v-else
     :disabled="authStore.loading"
     class="btn btn-accent"
-    type="button"
     @click="authStore.signIn"
   >
-    Sign In With GitHub
+    Sign In With Github
     <span v-if="authStore.loading" class="loading loading-spinner loading-md" />
     <Icon
       v-else
