@@ -1,13 +1,21 @@
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { oAuthProxy } from "better-auth/plugins"
 
 import db from "./db/index"
+
 import env from "./env"
 
 const baseURL = env.BETTER_AUTH_URL ?? {
   allowedHosts: [
     "localhost:*",
     "*.vercel.app",
+  ],
+  plugins: [
+    oAuthProxy({
+      productionURL: env.APP_PRODUCTION_URL,
+      secret: env.OAUTH_PROXY_SECRET,
+    }),
   ],
   trustedOrigins: [
     "https://*-projects.vercel.app",

@@ -14,6 +14,8 @@ const EnvSchema = z.object({
   BETTER_AUTH_SECRET: z.string(),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
+  APP_PRODUCTION_URL: z.string(),
+  OAUTH_PROXY_SECRET: z.string(),
 })
 
 export type EnvSchema = z.infer<typeof EnvSchema>
