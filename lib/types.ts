@@ -1,8 +1,8 @@
-import type { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from 'vue-router';
 
-import type { UserWithId } from "./auth";
+import type { UserWithId } from './auth';
 
-declare module "h3" {
+declare module 'h3' {
   interface H3EventContext {
     user?: UserWithId;
   }

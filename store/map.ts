@@ -1,17 +1,17 @@
-import type { LngLatBounds } from "maplibre-gl";
+import type { LngLatBounds } from 'maplibre-gl';
 
-import type { MapPoint } from "~/lib/types";
+import type { MapPoint } from '~/lib/types';
 
-import { CENTER_USA } from "~/lib/constants";
+import { CENTER_USA } from '~/lib/constants';
 
-export const useMapStore = defineStore("useMapStore", () => {
+export const useMapStore = defineStore('useMapStore', () => {
   const mapPoints = ref<MapPoint[]>([]);
   const selectedPoint = ref<MapPoint | null>(null);
   const addedPoint = ref<MapPoint & { centerMap?: boolean; zoom?: number } | null>(null);
 
   async function init() {
-    const { useMap } = await import("@indoorequal/vue-maplibre-gl");
-    const { LngLatBounds } = await import("maplibre-gl");
+    const { useMap } = await import('@indoorequal/vue-maplibre-gl');
+    const { LngLatBounds } = await import('maplibre-gl');
 
     const map = useMap();
 

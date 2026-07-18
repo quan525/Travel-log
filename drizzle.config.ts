@@ -1,6 +1,6 @@
-import { defineConfig } from 'drizzle-kit'
-import env from './lib/env'
-import 'dotenv/config'
+import { defineConfig } from 'drizzle-kit';
+import env from './lib/env';
+import 'dotenv/config';
 
 export default defineConfig({
   schema: './lib/db/schema/index.ts',
@@ -11,4 +11,4 @@ export default defineConfig({
     url: env.TURSO_DATABASE_URL,
     authToken: env.TURSO_AUTH_TOKEN,
   },
-})
+});

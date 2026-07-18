@@ -1,16 +1,16 @@
-import { relations } from "drizzle-orm";
-import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import type { SelectLocationLogImage } from './location-log-image';
+import { relations } from 'drizzle-orm';
+import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { createInsertSchema } from 'drizzle-zod';
 
-import type { SelectLocationLogImage } from "./location-log-image";
+import { z } from 'zod';
 
-import { DateSchema, DescriptionSchema, LatSchema, LongSchema, NameSchema } from "../../zod-schemas";
-import { user } from "./auth";
-import { location } from "./location";
-import { locationLogImage } from "./location-log-image";
+import { DateSchema, DescriptionSchema, LatSchema, LongSchema, NameSchema } from '../../zod-schemas';
+import { user } from './auth';
+import { location } from './location';
+import { locationLogImage } from './location-log-image';
 
-export const locationLog = sqliteTable("locationLog", {
+export const locationLog = sqliteTable('locationLog', {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   description: text(),
@@ -18,8 +18,8 @@ export const locationLog = sqliteTable("locationLog", {
   endedAt: int().notNull(),
   lat: real().notNull(),
   long: real().notNull(),
-  locationId: int().notNull().references(() => location.id, { onDelete: "cascade" }),
-  userId: int().notNull().references(() => user.id, { onDelete: "cascade" }),
+  locationId: int().notNull().references(() => location.id, { onDelete: 'cascade' }),
+  userId: int().notNull().references(() => user.id, { onDelete: 'cascade' }),
   createdAt: int().notNull().$default(() => Date.now()),
   updatedAt: int().notNull().$default(() => Date.now()).$onUpdate(() => Date.now()),
 });
@@ -49,13 +49,13 @@ export const InsertLocationLog = createInsertSchema(locationLog, {
   if (values.startedAt > values.endedAt || values.endedAt < values.startedAt) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Start Date must be before End Date",
-      path: ["startedAt"],
+      message: 'Start Date must be before End Date',
+      path: ['startedAt'],
     });
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "End Date must be after Start Date",
-      path: ["endedAt"],
+      message: 'End Date must be after Start Date',
+      path: ['endedAt'],
     });
   }
 });

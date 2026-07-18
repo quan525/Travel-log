@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from 'vue-router';
 
 const props = defineProps<{
   label: string;
@@ -7,7 +7,7 @@ const props = defineProps<{
   href?: string;
   to?: RouteLocationRaw;
   showLabel: boolean;
-  iconColor?: "text-accent" | "text-primary" | "text-secondary";
+  iconColor?: 'text-accent' | 'text-primary' | 'text-secondary';
 }>();
 
 const route = useRoute();

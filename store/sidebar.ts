@@ -1,6 +1,6 @@
-import type { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from 'vue-router';
 
-import type { MapPoint } from "~/lib/types";
+import type { MapPoint } from '~/lib/types';
 
 export type SidebarItem = {
   id: string;
@@ -11,7 +11,7 @@ export type SidebarItem = {
   mapPoint?: MapPoint | null;
 };
 
-export const useSidebarStore = defineStore("useSidebarStore", () => {
+export const useSidebarStore = defineStore('useSidebarStore', () => {
   const sidebarItems = ref<SidebarItem[]>([]);
   const sidebarTopItems = ref<SidebarItem[]>([]);
   const loading = ref(false);

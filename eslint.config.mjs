@@ -1,10 +1,10 @@
 // @ts-check
 
-import antfu from '@antfu/eslint-config'
-import withNuxt from './.nuxt/eslint.config.mjs'
+import antfu from '@antfu/eslint-config';
+import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt(antfu({
-  type: "app",
+  type: 'app',
   vue: true,
   typescript: true,
   formatters: true,
@@ -12,10 +12,10 @@ export default withNuxt(antfu({
     indent: 2,
     semi: true,
   },
-  ignores: [".pnpm-store/**", "**/migrations/*"],
+  ignores: ['.pnpm-store/**', '**/migrations/*'],
 }, {
   rules: {
-    "vue/max-attributes-per-line": ["error", {
+    'vue/max-attributes-per-line': ['error', {
       singleline: {
         max: 2,
       },
@@ -23,15 +23,15 @@ export default withNuxt(antfu({
         max: 1,
       },
     }],
-    "ts/no-redeclare": "off",
-    "ts/consistent-type-definitions": "off",
-    "no-console": ["warn"],
-    "antfu/no-top-level-await": ["off"],
-    "node/prefer-global/process": ["off"],
-    "node/no-process-env": ["error"],
-    "unicorn/filename-case": ["error", {
-      case: "kebabCase",
-      ignore: ["README.md"],
+    'ts/no-redeclare': 'off',
+    'ts/consistent-type-definitions': 'off',
+    'no-console': ['warn'],
+    'antfu/no-top-level-await': ['off'],
+    'node/prefer-global/process': ['off'],
+    'node/no-process-env': ['error'],
+    'unicorn/filename-case': ['error', {
+      case: 'kebabCase',
+      ignore: ['README.md'],
     }],
   },
 }));

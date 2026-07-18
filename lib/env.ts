@@ -1,10 +1,10 @@
-import { z } from 'zod'
-import tryParseEnv from './try-parse-env'
+import { z } from 'zod';
+import tryParseEnv from './try-parse-env';
 
 const optionalUrl = z.preprocess(
   value => typeof value === 'string' && value.trim() === '' ? undefined : value,
   z.url().optional(),
-)
+);
 
 const EnvSchema = z.object({
   NODE_ENV: z.string(),
@@ -16,10 +16,10 @@ const EnvSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string(),
   APP_PRODUCTION_URL: z.string(),
   OAUTH_PROXY_SECRET: z.string(),
-})
+});
 
-export type EnvSchema = z.infer<typeof EnvSchema>
+export type EnvSchema = z.infer<typeof EnvSchema>;
 
-const env = tryParseEnv(EnvSchema)
+const env = tryParseEnv(EnvSchema);
 
-export default env
+export default env;

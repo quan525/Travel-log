@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useAuthStore } from '~/store/auth'
+import { useAuthStore } from '~/store/auth';
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-await authStore.init()
+await authStore.init();
 </script>
 
 <template>
