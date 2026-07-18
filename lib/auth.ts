@@ -1,15 +1,22 @@
-import { betterAuth } from "better-auth"
-import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { oAuthProxy } from "better-auth/plugins"
+import type { User } from 'better-auth';
 
-import db from "./db/index"
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { createAuthMiddleware } from 'better-auth/api';
+import { oAuthProxy } from 'better-auth/plugins';
 
-import env from "./env"
+import db from './db/index';
+
+import env from './env';
+
+export type UserWithId = Omit<User, 'id'> & {
+  id: number;
+};
 
 const baseURL = env.BETTER_AUTH_URL ?? {
   allowedHosts: [
-    "localhost:*",
-    "*.vercel.app",
+    'localhost:*',
+    '*.vercel.app',
   ],
   plugins: [
     oAuthProxy({
@@ -18,15 +25,27 @@ const baseURL = env.BETTER_AUTH_URL ?? {
     }),
   ],
   trustedOrigins: [
-    "https://*-projects.vercel.app",
+    'https://*-projects.vercel.app',
   ],
-  protocol: "auto" as const,
-}
+  protocol: 'auto' as const,
+};
 
 export const auth = betterAuth({
   baseURL,
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === '/get-session') {
+        if (!ctx.context.session) {
+          return ctx.json({
+            session: null,
+            user: null,
+          });
+        }
+      }
+    }),
+  },
   database: drizzleAdapter(db, {
-    provider: "sqlite",
+    provider: 'sqlite',
   }),
   advanced: {
     database: {
@@ -39,4 +58,4 @@ export const auth = betterAuth({
       clientSecret: env.GITHUB_CLIENT_SECRET,
     },
   },
-})
+});

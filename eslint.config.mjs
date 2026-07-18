@@ -1,44 +1,37 @@
 // @ts-check
 
-import antfu from '@antfu/eslint-config'
-import withNuxt from './.nuxt/eslint.config.mjs'
+import antfu from '@antfu/eslint-config';
+import withNuxt from './.nuxt/eslint.config.mjs';
 
-export default withNuxt(
-  antfu(
-    {
-      // Nuxt is an application, not a reusable library.
-      type: 'app',
-
-      gitignore: true,
-
-      stylistic: {
-        indent: 2,
-        braceStyle: 'stroustrup',
+export default withNuxt(antfu({
+  type: 'app',
+  vue: true,
+  typescript: true,
+  formatters: true,
+  stylistic: {
+    indent: 2,
+    semi: true,
+  },
+  ignores: ['.pnpm-store/**', '**/migrations/*'],
+}, {
+  rules: {
+    'vue/max-attributes-per-line': ['error', {
+      singleline: {
+        max: 2,
       },
-
-      vue: true,
-      typescript: true,
-      formatters: true,
-      jsonc: false,
-      yaml: false,
-
-      ignores: ['.pnpm-store/**', '**/migrations/*'],
-    },
-
-    {
-      rules: {
-        'style/quotes': 'off',
-        'ts/no-redeclare': 'off',
-        'unicorn/filename-case': [
-          'error',
-          {
-            cases: {
-              kebabCase: true,
-              snakeCase: true,
-            },
-          },
-        ],
+      multiline: {
+        max: 1,
       },
-    },
-  ),
-)
+    }],
+    'ts/no-redeclare': 'off',
+    'ts/consistent-type-definitions': 'off',
+    'no-console': ['warn'],
+    'antfu/no-top-level-await': ['off'],
+    'node/prefer-global/process': ['off'],
+    'node/no-process-env': ['error'],
+    'unicorn/filename-case': ['error', {
+      case: 'kebabCase',
+      ignore: ['README.md'],
+    }],
+  },
+}));
