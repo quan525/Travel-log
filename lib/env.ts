@@ -6,12 +6,18 @@ const optionalUrl = z.preprocess(
   z.url().optional(),
 );
 
+const optionalSecret = z.preprocess(
+  value => typeof value === 'string' && value.trim() === '' ? undefined : value,
+  z.string().length(32).optional(),
+);
+
 const EnvSchema = z.object({
   NODE_ENV: z.string(),
   TURSO_DATABASE_URL: z.string(),
   TURSO_AUTH_TOKEN: z.string().optional(),
   BETTER_AUTH_URL: optionalUrl,
   BETTER_AUTH_SECRET: z.string(),
+  CSURF_ENCRYPT_SECRET: optionalSecret,
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
   APP_PRODUCTION_URL: z.string(),

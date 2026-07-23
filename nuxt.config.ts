@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import './lib/env';
+
+import env from './lib/env';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -12,7 +13,24 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
+    'nuxt-csurf',
   ],
+
+  csurf: {
+    cookie: {
+      httpOnly: true,
+      path: '/',
+      sameSite: 'strict',
+    },
+    encryptSecret: env.CSURF_ENCRYPT_SECRET ?? env.BETTER_AUTH_SECRET,
+    methodsToProtect: ['POST', 'PUT', 'PATCH', 'DELETE'],
+  },
+
+  routeRules: {
+    '/api/auth/**': {
+      csurf: false,
+    },
+  },
 
   eslint: {
     config: {
