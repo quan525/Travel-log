@@ -78,7 +78,7 @@ export default defineAuthenticatedEventHandler(async (event) => {
     const idSlug = `${slug} - ${id}`;
     existing = !!(await db.query.location.findFirst({
       where: eq (location.slug, idSlug),
-    }))
+    }));
     if (!existing) {
       slug = idSlug;
     }
