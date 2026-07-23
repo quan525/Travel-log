@@ -51,13 +51,13 @@ export const useLocationStore = defineStore('useLocationStore', () => {
 
       locations.value.forEach((location) => {
         const mapPoint = createMapPointFromLocation(location);
-        sidebarItems.push({
-          id: `location-${location.id}`,
-          label: location.name,
-          icon: 'tabler:map-pin-filled',
-          to: { name: 'dashboard-location-slug', params: { slug: location.slug } },
-          mapPoint,
-        });
+        // sidebarItems.push({
+        //   id: `location-${location.id}`,
+        //   label: location.name,
+        //   icon: 'tabler:map-pin-filled',
+        //   to: { name: 'dashboard-location-slug', params: { slug: location.slug } },
+        //   mapPoint,
+        // });
         mapPoints.push(mapPoint);
       });
 
@@ -70,13 +70,13 @@ export const useLocationStore = defineStore('useLocationStore', () => {
 
       currentLocation.value.locationLogs.forEach((log) => {
         const mapPoint = createMapPointFromLocationLog(log);
-        sidebarItems.push({
-          id: `location-log-${log.id}`,
-          label: log.name,
-          icon: 'tabler:map-pin-filled',
-          to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
-          mapPoint,
-        });
+        // sidebarItems.push({
+        //   id: `location-log-${log.id}`,
+        //   label: log.name,
+        //   icon: 'tabler:map-pin-filled',
+        //   to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
+        //   mapPoint,
+        // });
         mapPoints.push(mapPoint);
       });
 

@@ -10,7 +10,7 @@ import { DescriptionSchema, LatSchema, LongSchema, NameSchema } from '../../zod-
 import { user } from './auth';
 import { locationLog } from './location-log';
 
-export const location = sqliteTable('location', {
+export const location = sqliteTable('locations', {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   slug: text().notNull().unique(),

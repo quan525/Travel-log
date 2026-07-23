@@ -15,9 +15,10 @@ export default withNuxt(antfu({
   ignores: ['.pnpm-store/**', '**/migrations/*'],
 }, {
   rules: {
+    'style/quotes': 'off',
     'vue/max-attributes-per-line': ['error', {
       singleline: {
-        max: 2,
+        max: 3,
       },
       multiline: {
         max: 1,

@@ -51,37 +51,41 @@ effect(() => {
     }];
 
     if (currentLocation.value && currentLocationStatus.value !== 'pending') {
-      sidebarStore.sidebarTopItems.push({
-        id: 'link-dashboard',
-        label: currentLocation.value.name,
-        to: {
-          name: 'dashboard-location-slug',
-          params: {
-            slug: route.params.slug,
+      sidebarStore.sidebarTopItems.push(
+        // {
+        //   id: 'link-dashboard',
+        //   label: currentLocation.value.name,
+        //   to: {
+        //     name: 'dashboard-location-slug',
+        //     params: {
+        //       slug: route.params.slug,
+        //     },
+        //   },
+        //   icon: 'tabler:map',
+        // },
+        {
+          id: 'link-location-edit',
+          label: 'Edit Location',
+          to: {
+            name: 'dashboard-location-slug-edit',
+            params: {
+              slug: route.params.slug,
+            },
           },
+          icon: 'tabler:map-pin-cog',
         },
-        icon: 'tabler:map',
-      }, {
-        id: 'link-location-edit',
-        label: 'Edit Location',
-        to: {
-          name: 'dashboard-location-slug-edit',
-          params: {
-            slug: route.params.slug,
+        {
+          id: 'link-location-add',
+          label: 'Add Location Log',
+          to: {
+            name: 'dashboard-location-slug-add',
+            params: {
+              slug: route.params.slug,
+            },
           },
+          icon: 'tabler:circle-plus-filled',
         },
-        icon: 'tabler:map-pin-cog',
-      }, {
-        id: 'link-location-add',
-        label: 'Add Location Log',
-        to: {
-          name: 'dashboard-location-slug-add',
-          params: {
-            slug: route.params.slug,
-          },
-        },
-        icon: 'tabler:circle-plus-filled',
-      });
+      );
     }
   }
   else if (CURRENT_LOCATION_LOG_PAGES.has(route.name?.toString() || '')) {
@@ -211,7 +215,6 @@ function toggleSidebar() {
             'w-96': EDIT_PAGES.has(route.name?.toString() || ''),
           }"
         />
-        <AppMap class="flex-1" />
       </div>
     </div>
   </div>
