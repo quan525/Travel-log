@@ -1,5 +1,5 @@
-import { findLocationByName, findLocationBySlug, findUniqueSlug, insertLocation } from '~/lib/db/queries/location';
-import { InsertLocation, location } from '~/lib/db/schema';
+import { findLocationByName, findUniqueSlug, insertLocation } from '~/lib/db/queries/location';
+import { InsertLocation } from '~/lib/db/schema';
 import defineAuthenticatedEventHandler from '~/utils/define-authenticated-event-handler';
 
 function errorChainIncludes(error: unknown, text: string, depth = 0): boolean {
