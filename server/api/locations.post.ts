@@ -1,8 +1,5 @@
-import { and, eq } from 'drizzle-orm';
-import { customAlphabet } from "nanoid";
-import slugify from "slug";
-import db from '~/lib/db';
-import { InsertLocation, location } from '~/lib/db/schema';
+import { findLocationByName, findUniqueSlug, insertLocation } from '~/lib/db/queries/location';
+import { InsertLocation } from '~/lib/db/schema';
 import defineAuthenticatedEventHandler from '~/utils/define-authenticated-event-handler';
 
 function errorChainIncludes(error: unknown, text: string, depth = 0): boolean {
@@ -18,16 +15,7 @@ function errorChainIncludes(error: unknown, text: string, depth = 0): boolean {
     || errorChainIncludes(errorRecord.cause, text, depth + 1);
 }
 
-const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
-
 export default defineAuthenticatedEventHandler(async (event) => {
-  if (!event.context.userId) {
-    return sendError(event, createError({
-      statusCode: 401,
-      statusMessage: "Unauthorized",
-    }));
-  }
-
   const result = await readValidatedBody(event, InsertLocation.safeParse);
 
   if (!result.success) {
@@ -50,13 +38,7 @@ export default defineAuthenticatedEventHandler(async (event) => {
     });
   }
 
-  const existingLocation = !!(await db.query.location.findFirst({
-    where:
-      and(
-        eq (location.slug, result.data.name),
-        eq (location.userId, event.context.userId),
-      ),
-  }));
+  const existingLocation = await findLocationByName(result.data, event.context.user.id);
 
   if (existingLocation) {
     return sendError(event, createError({
@@ -65,34 +47,10 @@ export default defineAuthenticatedEventHandler(async (event) => {
     }));
   }
 
-  let slug = slugify(result.data.name);
-  let existing = !!(await db.query.location.findFirst({
-    where:
-      and(
-        eq (location.slug, slug),
-      ),
-  }));
-
-  while (existing) {
-    const id = nanoid();
-    const idSlug = `${slug} - ${id}`;
-    existing = !!(await db.query.location.findFirst({
-      where: eq (location.slug, idSlug),
-    }));
-    if (!existing) {
-      slug = idSlug;
-    }
-  }
+  const slug = await findUniqueSlug(result.data.name);
 
   try {
-    const [createdLocation] = await db
-      .insert(location)
-      .values({
-        ...result.data,
-        slug,
-        userId: event.context.userId,
-      })
-      .returning();
+    const createdLocation = await insertLocation(result.data, slug, event.context.user.id);
 
     setResponseStatus(event, 201);
     return createdLocation;
