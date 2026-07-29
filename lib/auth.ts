@@ -13,25 +13,34 @@ export type UserWithId = Omit<User, 'id'> & {
   id: number;
 };
 
-const baseURL = env.BETTER_AUTH_URL ?? {
+const isProduction = env.NODE_ENV === 'production';
+const productionURL = new URL(env.APP_PRODUCTION_URL ?? 'http://localhost:3000');
+
+if (isProduction && !env.APP_PRODUCTION_URL) {
+  throw new Error('APP_PRODUCTION_URL is required in production');
+}
+
+const baseURL = {
   allowedHosts: [
-    'localhost:*',
+    ...(isProduction ? [] : ['localhost', 'localhost:*']),
+    productionURL.host,
     '*.vercel.app',
-  ],
-  plugins: [
-    oAuthProxy({
-      productionURL: env.APP_PRODUCTION_URL,
-      secret: env.OAUTH_PROXY_SECRET,
-    }),
-  ],
-  trustedOrigins: [
-    'https://*-projects.vercel.app',
   ],
   protocol: 'auto' as const,
 };
 
 export const auth = betterAuth({
   baseURL,
+  plugins: [
+    oAuthProxy({
+      productionURL: productionURL.origin,
+      secret: env.OAUTH_PROXY_SECRET,
+    }),
+  ],
+  trustedOrigins: [
+    productionURL.origin,
+    'https://*.vercel.app',
+  ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path === '/get-session') {
@@ -48,6 +57,7 @@ export const auth = betterAuth({
     provider: 'sqlite',
   }),
   advanced: {
+    trustedProxyHeaders: isProduction,
     database: {
       generateId: false, // "serial" for auto-incrementing numeric IDs
     },

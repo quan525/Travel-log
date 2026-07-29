@@ -35,8 +35,6 @@ onMounted(() => {
           :class="{
             'tooltip-open': isPointSelected(point, mapStore.selectedPoint),
           }"
-          @mouseenter="mapStore.selectedPoint = point"
-          @mouseleave="mapStore.selectedPoint = null"
         >
           <Icon
             name="tabler:map-pin-filled"
