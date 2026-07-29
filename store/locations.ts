@@ -75,7 +75,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
           id: `location-log-${log.id}`,
           label: log.name,
           icon: 'tabler:map-pin-filled',
-          to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
+          // to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
           mapPoint,
         });
         mapPoints.push(mapPoint);
