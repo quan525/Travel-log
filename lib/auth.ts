@@ -13,11 +13,16 @@ export type UserWithId = Omit<User, 'id'> & {
   id: number;
 };
 
-const productionURL = new URL(env.APP_PRODUCTION_URL);
+const isProduction = env.NODE_ENV === 'production';
+const productionURL = new URL(env.APP_PRODUCTION_URL ?? 'http://localhost:3000');
+
+if (isProduction && !env.APP_PRODUCTION_URL) {
+  throw new Error('APP_PRODUCTION_URL is required in production');
+}
 
 const baseURL = {
   allowedHosts: [
-    ['localhost', 'localhost:*'],
+    ...(isProduction ? [] : ['localhost', 'localhost:*']),
     productionURL.host,
     '*.vercel.app',
   ],
@@ -52,6 +57,7 @@ export const auth = betterAuth({
     provider: 'sqlite',
   }),
   advanced: {
+    trustedProxyHeaders: isProduction,
     database: {
       generateId: false, // "serial" for auto-incrementing numeric IDs
     },
