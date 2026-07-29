@@ -13,25 +13,29 @@ export type UserWithId = Omit<User, 'id'> & {
   id: number;
 };
 
-const baseURL = env.BETTER_AUTH_URL ?? {
+const productionURL = new URL(env.APP_PRODUCTION_URL);
+
+const baseURL = {
   allowedHosts: [
     'localhost:*',
+    productionURL.host,
     '*.vercel.app',
-  ],
-  plugins: [
-    oAuthProxy({
-      productionURL: env.APP_PRODUCTION_URL,
-      secret: env.OAUTH_PROXY_SECRET,
-    }),
-  ],
-  trustedOrigins: [
-    'https://*-projects.vercel.app',
   ],
   protocol: 'auto' as const,
 };
 
 export const auth = betterAuth({
   baseURL,
+  plugins: [
+    oAuthProxy({
+      productionURL: productionURL.origin,
+      secret: env.OAUTH_PROXY_SECRET,
+    }),
+  ],
+  trustedOrigins: [
+    productionURL.origin,
+    'https://*.vercel.app',
+  ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path === '/get-session') {

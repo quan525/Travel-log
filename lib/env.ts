@@ -20,7 +20,7 @@ const EnvSchema = z.object({
   CSURF_ENCRYPT_SECRET: optionalSecret,
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
-  APP_PRODUCTION_URL: z.string(),
+  APP_PRODUCTION_URL: z.url(),
   OAUTH_PROXY_SECRET: z.string(),
 });
 
