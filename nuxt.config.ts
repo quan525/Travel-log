@@ -13,7 +13,11 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
+    // "nuxt-csurf",
+    // "nuxt-easy-lightbox",
+    // '@indoorequal/vue-maplibre-gl',
     'nuxt-csurf',
+    'nuxt-maplibre',
   ],
 
   csurf: {
@@ -48,5 +52,10 @@ export default defineNuxtConfig({
       tsconfigPaths(),
       tailwindcss(),
     ],
+    optimizeDeps: {
+      include: [
+        "maplibre-gl",
+      ],
+    },
   },
 });
