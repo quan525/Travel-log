@@ -17,7 +17,7 @@ const productionURL = new URL(env.APP_PRODUCTION_URL);
 
 const baseURL = {
   allowedHosts: [
-    'localhost:*',
+    ['localhost', 'localhost:*'],
     productionURL.host,
     '*.vercel.app',
   ],
