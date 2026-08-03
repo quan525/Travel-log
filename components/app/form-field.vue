@@ -5,9 +5,11 @@ const props = defineProps<{
   label: string;
   name: string;
   error?: string;
-  type?: "text" | "textarea";
+  type?: "text" | "textarea" | "number";
   disabled?: boolean;
 }>();
+
+const model = defineModel<string | number | undefined>();
 </script>
 
 <template>
@@ -16,15 +18,16 @@ const props = defineProps<{
       {{ props.label }}
     </legend>
     <Field
+      v-model="model"
       :as="props.type === 'textarea' ? 'textarea' : 'input'"
       :name="props.name"
-      :type="props.type === 'textarea' ? undefined : 'text'"
+      :type="props.type === 'textarea' ? undefined : props.type ?? 'text'"
       :disabled="props.disabled"
       class="w-full"
       :class="{
         'input-error': props.error && props.type !== 'textarea',
         'textarea-error': props.error && props.type === 'textarea',
-        'input': !props.type || props.type === 'text',
+        'input': props.type !== 'textarea',
         'textarea': props.type === 'textarea',
       }"
     />

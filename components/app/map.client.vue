@@ -1,19 +1,32 @@
-<script setup>
+<script lang="ts" setup>
+import type { MglEvent } from "@indoorequal/vue-maplibre-gl";
+import type { LngLat } from "maplibre-gl";
+
 import { CENTER_USA } from "~/lib/constants";
 import { useMapStore } from "~/store/map";
 
 const colorMode = useColorMode();
 const mapStore = useMapStore();
-// const style = 'https://tiles.openfreemap.org/styles/liberty';
 
 const style = computed(() =>
-  colorMode.value === "light"
-    ? "https://tiles.openfreemap.org/styles/liberty"
-    : "/styles/dark.json",
-);
+  colorMode.value === "dark"
+    ? "/styles/dark.json"
+    : "https://tiles.openfreemap.org/styles/liberty");
+const zoom = 3;
 
-const center = CENTER_USA;
-const zoom = 8;
+function updateAddedPoint(location: LngLat) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = location.lat;
+    mapStore.addedPoint.long = location.lng;
+  }
+}
+
+function onDoubleClick(mglEvent: MglEvent<"dblclick">) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = mglEvent.event.lngLat.lat;
+    mapStore.addedPoint.long = mglEvent.event.lngLat.lng;
+  }
+}
 
 onMounted(() => {
   mapStore.init();
@@ -21,8 +34,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <MglMap :map-style="style" :center="center" :zoom="zoom">
+  <MglMap
+    :map-style="style"
+    :center="CENTER_USA"
+    :zoom="zoom"
+    :double-click-zoom="false"
+    @map:dblclick="onDoubleClick"
+  >
     <MglNavigationControl />
+    <MglMarker
+      v-if="mapStore.addedPoint"
+      draggable
+      class-name="z-50"
+      :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+      @update:coordinates="updateAddedPoint"
+    >
+      <template #marker>
+        <div
+          class="tooltip tooltip-top tooltip-open hover:cursor-pointer"
+          data-tip="Drag to your desired location"
+        >
+          <Icon
+            name="tabler:map-pin-filled"
+            size="35"
+            class="text-primary dark:text-warning"
+          />
+        </div>
+      </template>
+    </MglMarker>
     <MglMarker
       v-for="point in mapStore.mapPoints"
       :key="point.id"
@@ -35,6 +74,8 @@ onMounted(() => {
           :class="{
             'tooltip-open': isPointSelected(point, mapStore.selectedPoint),
           }"
+          @mouseenter="mapStore.selectedPoint = point"
+          @mouseleave="mapStore.selectedPoint = null"
         >
           <Icon
             name="tabler:map-pin-filled"
