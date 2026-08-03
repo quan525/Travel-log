@@ -13,13 +13,15 @@ onMounted(() => {
 
 <template>
   <div class="page-content-top">
-    <h2 class="text-2xl">Locations</h2>
+    <h2 class="text-2xl">
+      Locations
+    </h2>
     <div v-if="status === 'pending'">
       <span class="loading loading-spinner loading-xl" />
     </div>
     <div
       v-else-if="locations && locations.length > 0"
-      class="mt-4 flex flex-nowrap gap-2 overflow-auto"
+      class="mt-4 flex flex-nowrap mt-4 gap-2 overflow-auto"
     >
       <div
         v-for="location in locations"

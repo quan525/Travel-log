@@ -123,10 +123,13 @@ function toggleSidebar() {
           'flex-col': !EDIT_PAGES.has(route.name?.toString() || ''),
         }"
       >
-        <div class="flex-1">
-          <NuxtPage class="h-1/2" />
-          <AppMap />
-        </div>
+        <NuxtPage
+          :class="{
+            'shrink-0': EDIT_PAGES.has(route.name?.toString() || ''),
+            'w-96': EDIT_PAGES.has(route.name?.toString() || ''),
+          }"
+        />
+        <AppMap class="flex-1" />
       </div>
     </div>
   </div>

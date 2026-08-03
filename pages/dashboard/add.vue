@@ -1,27 +1,32 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
+import { CENTER_USA } from '~/lib/constants';
 
 import { InsertLocation } from '~/lib/db/schema';
+import { useMapStore } from '~/store/map';
 
 const router = useRouter();
 const { $csrfFetch } = useNuxtApp();
 const loading = ref(false);
-const submitted = ref("");
+const submitted = ref(false);
 const submitError = ref('');
+const mapStore = useMapStore();
 
 const {
   errors,
   handleSubmit,
   isSubmitting,
   meta,
+  setFieldValue,
+  controlledValues,
 } = useForm({
   validationSchema: toTypedSchema(InsertLocation),
   initialValues: {
     name: '',
     description: '',
-    lat: undefined,
-    long: undefined,
+    long: (CENTER_USA as [number, number])[0],
+    lat: (CENTER_USA as [number, number])[1],
   },
 });
 
@@ -36,6 +41,7 @@ const onSubmit = handleSubmit(
         body: values,
       });
       submitted.value = true;
+      mapStore.addedPoint = null;
       await navigateTo('/dashboard');
     }
     catch (error) {
@@ -63,6 +69,30 @@ const onSubmit = handleSubmit(
   },
 );
 
+function formatNumber(value: unknown) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue.toFixed(5) : '—';
+}
+
+effect(() => {
+  setFieldValue('lat', formatNumber(mapStore.addedPoint?.lat));
+  setFieldValue('long', formatNumber(mapStore.addedPoint?.long));
+});
+
+onMounted(() => {
+  mapStore.addedPoint = {
+    id: 1,
+    name: 'Added point',
+    description: '',
+    long: (CENTER_USA as [number, number])[0],
+    lat: (CENTER_USA as [number, number])[1],
+  };
+});
+
+onBeforeUnmount(() => {
+  mapStore.addedPoint = null;
+});
+
 onBeforeRouteLeave(() => {
   if (!submitted.value && meta.value.dirty) {
     // eslint-disable-next-line no-alert
@@ -70,7 +100,9 @@ onBeforeRouteLeave(() => {
     if (!confirm) {
       return false;
     }
+    mapStore.addedPoint = null;
   }
+  console.log('Leaving route, cleaning up addedPoint', mapStore.addedPoint);
   return true;
 });
 </script>
@@ -124,20 +156,45 @@ onBeforeRouteLeave(() => {
         type="textarea"
       />
       <AppFormField
+        v-model="latitude"
         name="lat"
         label="Latitude"
         :error="errors.lat"
         :disabled="loading"
-        type="text"
+        type="number"
+        :min="-90"
+        :max="90"
+        step="any"
       />
+
       <AppFormField
+        v-model="longitude"
         name="long"
         label="Longitude"
         :error="errors.long"
         :disabled="loading"
-        type="text"
+        type="number"
+        :min="-180"
+        :max="180"
+        step="any"
       />
-
+      <p class="text-xs text-gray-400">
+        Current coordinates: {{ controlledValues.lat }}, {{ controlledValues.long }}
+      </p>
+      <p>
+        To set the coordinates:
+      </p>
+      <ul class="list-disc ml-4 text-sm">
+        <li>
+          Drag the <Icon name="tabler:map-pin-filled" class="text-primary dark:text-warning" /> marker on the map.
+        </li>
+        <li>
+          Double click the map.
+        </li>
+        <li>
+          Search for a location below.
+        </li>
+      </ul>
       <div class="flex justify-end gap-2">
         <button type="button" class="btn btn-outline" @click="router.back()">
           <Icon name="tabler:arrow-left" size="24" />
