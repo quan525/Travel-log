@@ -27,6 +27,8 @@ export const useMapStore = defineStore("useMapStore", () => {
         map.map?.flyTo({
           center: CENTER_USA,
           zoom: 2,
+          speed: 0.8,
+          essential: true,
         });
         return;
       }
@@ -41,6 +43,7 @@ export const useMapStore = defineStore("useMapStore", () => {
       map.map?.fitBounds(bounds, {
         padding,
         maxZoom: 10,
+        essential: true,
       });
     });
 
@@ -57,16 +60,16 @@ export const useMapStore = defineStore("useMapStore", () => {
       immediate: true,
     });
 
-    watch(selectedPoint, (point) => {
-      if (!point)
-        return;
+    // watch(selectedPoint, (point) => {
+    //   if (!point)
+    //     return;
 
-      map.map?.easeTo({
-        center: [point.long, point.lat],
-        duration: 500,
-        essential: true,
-      });
-    });
+    //   map.map?.easeTo({
+    //     center: [point.long, point.lat],
+    //     duration: 500,
+    //     essential: true,
+    //   });
+    // });
   }
 
   return {

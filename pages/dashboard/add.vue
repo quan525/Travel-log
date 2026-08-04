@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { NominatimResult } from '~/lib/types';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { CENTER_USA } from '~/lib/constants';
@@ -72,6 +73,21 @@ const onSubmit = handleSubmit(
 function formatNumber(value: unknown) {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue.toFixed(5) : '—';
+}
+
+function searchResultSelected(result: NominatimResult) {
+  if (!controlledValues.value.name) {
+    setFieldValue("name", result.display_name);
+  }
+  mapStore.addedPoint = {
+    id: 1,
+    name: "Added Point",
+    description: "",
+    long: Number(result.lon),
+    lat: Number(result.lat),
+    centerMap: true,
+    zoom: 11,
+  };
 }
 
 effect(() => {
@@ -156,7 +172,6 @@ onBeforeRouteLeave(() => {
         type="textarea"
       />
       <AppFormField
-        v-model="latitude"
         name="lat"
         label="Latitude"
         :error="errors.lat"
@@ -168,7 +183,6 @@ onBeforeRouteLeave(() => {
       />
 
       <AppFormField
-        v-model="longitude"
         name="long"
         label="Longitude"
         :error="errors.long"
@@ -213,6 +227,8 @@ onBeforeRouteLeave(() => {
           </template>
         </button>
       </div>
+      <div class="divider" />
+      <AppPlaceSearch @result-selected="searchResultSelected" />
     </form>
   </div>
 </template>

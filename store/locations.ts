@@ -45,6 +45,14 @@ export const useLocationStore = defineStore("useLocationStore", () => {
   const sidebarStore = useSidebarStore();
   const mapStore = useMapStore();
 
+  function createMapPointFromLocation(location: SelectLocationWithLogs): MapPoint {
+    return {
+      ...location,
+      to: { name: "dashboard-location-slug", params: { slug: location.slug } },
+      toLabel: "View",
+    };
+  }
+
   effect(() => {
     if (locations.value && LOCATION_PAGES.has(route.name?.toString() || "")) {
       const mapPoints: MapPoint[] = [];
@@ -56,7 +64,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
           id: `location-${location.id}`,
           label: location.name,
           icon: 'tabler:map-pin-filled',
-          // to: { name: 'dashboard-location-slug', params: { slug: location.slug } },
+          to: { name: 'dashboard-location-slug', params: { slug: location.slug } },
           mapPoint,
         });
         mapPoints.push(mapPoint);
@@ -75,7 +83,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
           id: `location-log-${log.id}`,
           label: log.name,
           icon: 'tabler:map-pin-filled',
-          // to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
+          to: { name: 'dashboard-location-slug-id', params: { id: log.id } },
           mapPoint,
         });
         mapPoints.push(mapPoint);
