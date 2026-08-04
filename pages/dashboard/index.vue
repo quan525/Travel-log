@@ -27,7 +27,6 @@ onMounted(() => {
         v-for="location in locations"
         :key="location.id"
         class="card card-compact bg-base-300 h-40 border-2 w-72 mb-2 shrink-0 hover:cursor-pointer"
-        :to="{ name: 'dashboard-location-slug', params: { slug: location.slug } }"
         :class="{
           'border-accent': mapStore.selectedPoint?.id === location.id,
           'border-base-300': mapStore.selectedPoint?.id !== location.id,
