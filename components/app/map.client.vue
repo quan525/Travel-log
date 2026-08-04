@@ -19,7 +19,7 @@ function updateAddedPoint(location: LngLat) {
     mapStore.addedPoint.lat = location.lat;
     mapStore.addedPoint.long = location.lng;
   }
-}
+};
 
 function onDoubleClick(mglEvent: MglEvent<"dblclick">) {
   if (mapStore.addedPoint) {

@@ -45,6 +45,14 @@ export const useLocationStore = defineStore("useLocationStore", () => {
   const sidebarStore = useSidebarStore();
   const mapStore = useMapStore();
 
+  function createMapPointFromLocation(location: SelectLocationWithLogs): MapPoint {
+    return {
+      ...location,
+      // to: { name: "dashboard-location-slug", params: { slug: location.slug } },
+      toLabel: "View",
+    };
+  }
+
   effect(() => {
     if (locations.value && LOCATION_PAGES.has(route.name?.toString() || "")) {
       const mapPoints: MapPoint[] = [];
