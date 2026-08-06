@@ -19,9 +19,6 @@ export const useMapStore = defineStore("useMapStore", () => {
     const padding = 60;
 
     effect(() => {
-      if (addedPoint.value)
-        return;
-
       const firstPoint = mapPoints.value[0];
       if (!firstPoint) {
         map.map?.flyTo({

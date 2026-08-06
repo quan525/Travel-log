@@ -27,6 +27,7 @@ const route = useRoute();
       <Icon
         :name="props.icon"
         size="24"
+        class="shrink-0"
         :class="iconColor"
       />
       <Transition name="grow">

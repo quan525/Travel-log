@@ -3,6 +3,11 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import env from './lib/env';
 
+declare module 'nitropack/types' {
+  interface NitroRouteConfig {
+    csurf?: Partial<import('nuxt-csurf').ModuleOptions> | false;
+  }
+}
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',

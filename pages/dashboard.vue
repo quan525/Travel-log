@@ -1,122 +1,210 @@
 <script lang="ts" setup>
-import { CURRENT_LOCATION_LOG_PAGES, CURRENT_LOCATION_PAGES, EDIT_PAGES, LOCATION_PAGES } from "~/lib/constants";
+import {
+  CURRENT_LOCATION_LOG_PAGES,
+  CURRENT_LOCATION_PAGES,
+  EDIT_PAGES,
+  LOCATION_PAGES,
+} from "~/lib/constants";
 import { useLocationStore } from "~/store/locations";
 import { useMapStore } from "~/store/map";
 import { useSidebarStore } from "~/store/sidebar";
 
 const isSidebarOpen = ref(true);
+
 const route = useRoute();
 const sidebarStore = useSidebarStore();
 const locationsStore = useLocationStore();
 const mapStore = useMapStore();
 
-const { currentLocation, currentLocationStatus } = storeToRefs(locationsStore);
-
-if (LOCATION_PAGES.has(route.name?.toString() || "")) {
-  await locationsStore.refreshLocations();
-}
-
-if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || "") || CURRENT_LOCATION_LOG_PAGES.has(route.name?.toString() || "")) {
-  await locationsStore.refreshCurrentLocation();
-}
-
-if (CURRENT_LOCATION_LOG_PAGES.has(route.name?.toString() || "")) {
-  await locationsStore.refreshCurrentLocationLog();
-}
+const {
+  currentLocation,
+  currentLocationStatus,
+} = storeToRefs(locationsStore);
 
 onMounted(() => {
-  isSidebarOpen.value = localStorage.getItem("isSidebarOpen") === "true";
+  const savedValue = localStorage.getItem("isSidebarOpen");
+
+  if (savedValue !== null) {
+    isSidebarOpen.value = savedValue === "true";
+  }
 });
 
-effect(() => {
-  if (LOCATION_PAGES.has(route.name?.toString() || "")) {
-    sidebarStore.sidebarTopItems = [{
-      id: "link-dashboard",
-      label: "Locations",
-      href: "/dashboard",
-      icon: "tabler:map",
-    }, {
-      id: "link-location-add",
-      label: "Add Location",
-      href: "/dashboard/add",
-      icon: "tabler:circle-plus-filled",
-    }];
-  }
-  else if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
-    sidebarStore.sidebarTopItems = [{
-      id: "link-dashboard",
-      label: "Back to Locations",
-      href: "/dashboard",
-      icon: "tabler:arrow-left",
-    }];
+/*
+ * Prevent an older request from replacing the sidebar
+ * after the user has navigated to another route.
+ */
+let routeRequestId = 0;
 
-    if (currentLocation.value && currentLocationStatus.value !== "pending") {
-      // sidebarStore.sidebarTopItems.push({
-      //   id: "link-dashboard",
-      //   label: currentLocation.value.name,
-      //   to: {
-      //     name: "dashboard-location-slug",
-      //     params: {
-      //       slug: route.params.slug,
-      //     },
-      //   },
-      //   icon: "tabler:map",
-      // });
+watch(
+  [
+    () => route.name,
+    () => route.params.slug,
+    () => route.params.id,
+  ],
+  async ([name, rawSlug, rawId]) => {
+    const requestId = ++routeRequestId;
+
+    // These values belong to this specific watcher execution.
+    const routeName = name?.toString() ?? "";
+    const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
+    const id = Array.isArray(rawId) ? rawId[0] : rawId;
+
+    // Clear the previous route's items while loading.
+    sidebarStore.sidebarTopItems = [];
+
+    try {
+      /*
+       * Check the most specific page type first.
+       * Use else-if so only one branch runs.
+       */
+      if (CURRENT_LOCATION_LOG_PAGES.has(routeName)) {
+        await locationsStore.refreshCurrentLocation();
+        await locationsStore.refreshCurrentLocationLog();
+      }
+      else if (CURRENT_LOCATION_PAGES.has(routeName)) {
+        await locationsStore.refreshCurrentLocation();
+      }
+      else if (LOCATION_PAGES.has(routeName)) {
+        await locationsStore.refreshLocations();
+      }
     }
-  }
-  else if (CURRENT_LOCATION_LOG_PAGES.has(route.name?.toString() || "")) {
-    if (currentLocation.value && currentLocationStatus.value !== "pending") {
-      // sidebarStore.sidebarTopItems = [{
-      //   id: "link-location",
-      //   label: `Back to "${currentLocation.value.name}"`,
-      //   to: {
-      //     name: "dashboard-location-slug",
-      //     params: {
-      //       slug: route.params.slug,
-      //     },
-      //   },
-      //   icon: "tabler:arrow-left",
-      // }, {
-      //   id: "link-view-location-log",
-      //   label: "View Log",
-      //   to: {
-      //     name: "dashboard-location-slug-id",
-      //     params: {
-      //       slug: route.params.slug,
-      //       id: route.params.id,
-      //     },
-      //   },
-      //   icon: "tabler:map-pin",
-      // }, {
-      //   id: "link-edit-location-log",
-      //   label: "Edit Log",
-      //   to: {
-      //     name: "dashboard-location-slug-id-edit",
-      //     params: {
-      //       slug: route.params.slug,
-      //       id: route.params.id,
-      //     },
-      //   },
-      //   icon: "tabler:map-pin-cog",
-      // }, {
-      //   id: "link-location-log-images",
-      //   label: "Manage Images",
-      //   to: {
-      //     name: "dashboard-location-slug-id-images",
-      //     params: {
-      //       slug: route.params.slug,
-      //       id: route.params.id,
-      //     },
-      //   },
-      //   icon: "tabler:photo-cog",
-      // }];
+    catch (error) {
+      console.error("Failed to load route data:", error);
+
+      // Do not let an old request affect the active route.
+      if (requestId !== routeRequestId) {
+        return;
+      }
     }
-  }
-});
+
+    /*
+     * The route changed while an earlier request was loading.
+     * Ignore the result from that earlier request.
+     */
+    if (requestId !== routeRequestId) {
+      return;
+    }
+
+    if (LOCATION_PAGES.has(routeName)) {
+      sidebarStore.sidebarTopItems = [
+        {
+          id: "link-dashboard",
+          label: "Locations",
+          href: "/dashboard",
+          icon: "tabler:map",
+        },
+        {
+          id: "link-location-add",
+          label: "Add Location",
+          href: "/dashboard/add",
+          icon: "tabler:circle-plus-filled",
+        },
+      ];
+
+      return;
+    }
+
+    if (CURRENT_LOCATION_LOG_PAGES.has(routeName)) {
+      if (
+        !currentLocation.value
+        || currentLocationStatus.value === "pending"
+      ) {
+        return;
+      }
+
+      sidebarStore.sidebarTopItems = [
+        {
+          id: "link-location",
+          label: `Back to "${currentLocation.value.name}"`,
+          to: {
+            name: "dashboard-location-slug",
+            params: { slug },
+          },
+          icon: "tabler:arrow-left",
+        },
+        {
+          id: "link-view-location-log",
+          label: "View Log",
+          to: {
+            name: "dashboard-location-slug-id",
+            params: { slug, id },
+          },
+          icon: "tabler:map-pin",
+        },
+        {
+          id: "link-edit-location-log",
+          label: "Edit Log",
+          to: {
+            name: "dashboard-location-slug-id-edit",
+            params: { slug, id },
+          },
+          icon: "tabler:map-pin-cog",
+        },
+      ];
+
+      return;
+    }
+
+    if (CURRENT_LOCATION_PAGES.has(routeName)) {
+      const items = [
+        {
+          id: "link-dashboard",
+          label: "Back to Locations",
+          href: "/dashboard",
+          icon: "tabler:arrow-left",
+        },
+      ];
+
+      if (
+        currentLocation.value
+        && currentLocationStatus.value !== "pending"
+      ) {
+        items.push(
+          {
+            id: "link-location",
+            label: currentLocation.value.name,
+            to: {
+              name: "dashboard-location-slug",
+              params: { slug },
+            },
+            icon: "tabler:map",
+          },
+          {
+            id: "link-location-edit",
+            label: "Edit Location",
+            to: {
+              name: "dashboard-location-slug-edit",
+              params: { slug },
+            },
+            icon: "tabler:map-pin-cog",
+          },
+          {
+            id: "link-location-log-add",
+            label: "Add Location Log",
+            to: {
+              name: "dashboard-location-slug-add",
+              params: { slug },
+            },
+            icon: "tabler:circle-plus-filled",
+          },
+        );
+      }
+
+      sidebarStore.sidebarTopItems = items;
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
-  localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
+
+  localStorage.setItem(
+    "isSidebarOpen",
+    isSidebarOpen.value.toString(),
+  );
 }
 </script>
 
