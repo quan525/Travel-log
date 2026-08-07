@@ -15,6 +15,7 @@
     "db:studio": "drizzle-kit studio",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
+    "typecheck": "nuxi typecheck",
     "prepare": "husky"
   },
   "dependencies": {
@@ -51,7 +52,9 @@
     "eslint": "10.6.0",
     "eslint-plugin-format": "^2.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8"
+    "lint-staged": "^17.0.8",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.9"
   },
   "lint-staged": {
     "*": "pnpm lint"
